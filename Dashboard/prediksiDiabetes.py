@@ -4,9 +4,9 @@ import pandas as pd
 import joblib
 
 # Load model dan encoder/scaler
-gender_encoder = joblib.load("../Encoder Tersimpan/gender_label_encoder.joblib")
-scaler = joblib.load("../Encoder Tersimpan/minmax_scaler.joblib")
-model = joblib.load("../Model Tersimpan/BestModelCB.joblib")
+gender_encoder = joblib.load("Encoder Tersimpan/gender_label_encoder.joblib")
+scaler = joblib.load("Encoder Tersimpan/minmax_scaler.joblib")
+model = joblib.load("Model Tersimpan/BestModelCB.joblib")
 
 # Kolom one-hot smoking history
 smoking_ohe_columns = [
