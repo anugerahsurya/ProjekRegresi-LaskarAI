@@ -34,14 +34,17 @@ Berdasarkan latar belakang yang disampaikan, dapat didefinisikan hal yang ingin 
 - Membentuk dashboard yang dapat digunakan untuk mendeteksi kerentanan diabetes seseorang.
 
 ### Solution statements
+
 - Dalam membentuk model prediksi, akan digunakan algoritma machine learning serta menggunakan dataset yang diperoleh dari hugging face terkait kondisi diabetes dengan jumlah observasi sebanyak 100.000. Dalam mengevaluasi performa model akan digunakan ukuran evaluasi berupa Accuracy, Balanced Accuracy, F-1 Score Macro, dan ROC-AUC.
 - Dalam menguji efektivitas teknik oversampling, digunakan metode SMOTE yang bertujuan menambah distribusi data pada class minoritas. Selanjutnya perlakuan ini akan dibandingkan dengan model yang dibentuk tanpa perlakuan oversampling. Hasil pemodelan akan dibanding menggunakan ukuran evaluasi yang sama.
 - Dalam membuat mekanisme yang dapat diakses dengan mudah, dibentuk dashboard yang menerima inputan pengguna berdasarkan variabel penyusun untuk model klasifikasi kerentanan diabetes. Dashboard dapat diujikan dengan mencoba input serta meninjau hasil prediksi yang diberikan.
 
-
 ## Data Understanding
-Dataset yang digunakan dalam penelitian ini diperoleh dari Hugging Face Hub terkait Dataset Diabetes [Dataset Diabetes](https://huggingface.co/datasets/m2s6a8/diabetes_prediction_dataset). Dataset tersebut terdiri dari 9 variabel dengan 100.000 observasi. 
+
+Dataset yang digunakan dalam penelitian ini diperoleh dari Hugging Face Hub terkait Dataset Diabetes [Dataset Diabetes](https://huggingface.co/datasets/m2s6a8/diabetes_prediction_dataset). Dataset tersebut terdiri dari 9 variabel dengan 100.000 observasi.
+
 ### Variabel penyusun dataset dapat dilihat pada keterangan berikut.
+
 - gender : menyatakan jenis kelamin dari responden, terdapat 3 isian yang diberikan pada data yaitu Female, Male, dan Other.
 - age : menyatakan usia dari responden sehingga menerima inputan berupa nilai numerik positif.
 - hypertension : menyatakan riwayat hipertensi dari responden sehingga isian akan berupa jawaban 0 (Tidak) atau 1 (Ya).
@@ -53,6 +56,7 @@ Dataset yang digunakan dalam penelitian ini diperoleh dari Hugging Face Hub terk
 - diabetes **(variabel target)** : menyatakan klasifikasi seseorang dikategorikan diabetes (1) atau tidak terkena diabetes (0).
 
 ### Analisis Deksriptif Data
+
 <figure>
   <img src="Visualisasi/Analisis Deskriptif Data.png" alt="Analisis Deskriptif Data" width="600"/>
   <figcaption><b>Gambar 1.</b> Analisis deskriptif data</figcaption>
@@ -62,12 +66,13 @@ Berdasarkan analisis deskriptif yang dilakukan pada Gambar 1, terlihat bahwa tid
 Pada variabel bmi yang menyatakan Body Mass Index terlihat bahwa rataan responden berada pada nilai 27 - 28. Pada variabel HbA1c_level terlihat nilai minimum 3.5 dan max 9. Nilai rataan menunjukkan nilai 5.52 karena mendekati nilai minimum. Pada variabel blood_glucose_level terlihat bahwa responden berada ada gula rata-rata 138. Terakhir, pada variabel target yaitu status diabetes terlihat bahwa responden cenderung berada pada kondisi tidak terkena diabetes.
 
 ### Visualisasi Variabel Prediktor
+
 <figure>
   <img src="Visualisasi/Visualisasi Variabel Prediktor.png" alt="Visualisasi Prediktor" width="600"/>
   <figcaption><b>Gambar 2.</b> Sebaran Distribusi Variabel Prediktor</figcaption>
 </figure>
 
-Pada sebaran untuk variabel prediktor, terlihat bahwa responden didominasi pada jenis kelamin Laki-laki. Selain itu usia responden juga didominasi pada penduduk Lansia, di mana berusia 80 Tahun. Pada visualisasi terkait Riwayat Merokok juga terlihat bahwa responden didominasi oleh keterangan Tanpa Informasi. 
+Pada sebaran untuk variabel prediktor, terlihat bahwa responden didominasi pada jenis kelamin Laki-laki. Selain itu usia responden juga didominasi pada penduduk Lansia, di mana berusia 80 Tahun. Pada visualisasi terkait Riwayat Merokok juga terlihat bahwa responden didominasi oleh keterangan Tanpa Informasi.
 
 <figure>
   <img src="Visualisasi/Visualisasi Variabel Target.png" alt="Visualisasi Distribusi Label" width="300"/>
@@ -81,18 +86,20 @@ Pada visualisasi yang diperoleh terlihat pada distribusi label didominasi dengan
 Tahapan ini bertujuan untuk memberikan perlakuan pada data agar dapat menyesuaikan dengan algoritma yang digunakan. Berikut pemrosesan yang dilakukan pada Tahapan ini.
 
 ### 1. Encoding Variabel Kategorik
+
 Berdasarkan perbedaan jenis variabel sebelumnya, dilakukan proses encoding untuk variabel kategorik agar berubah pada tipe numerik. Jenis encoding untuk variabel gender adalah Label Encoder sehingga jenis kelamin akan dinyatakan oleh nilai 0, 1, dan 2. Variabel smoking_history menggunakan encoder berupa One Hot Encoding, sehingga setiap kategori akan dipisahkan menjadi sebanyak 6 kolom yang berisi nilai boolean True (1) atau False (0).
 
 ### 2. Splitting Data
-Didefinisikan y dan X berdasarkan seluruh variabel yang digunakan di awal. Selain itu dilakukan splitting dengan proporsi 80% : 20% menggunakan mekanisme stratify terhadap kategori untuk memperhatikan distribusi label untuk data latih dan data uji. 
+
+Didefinisikan y dan X berdasarkan seluruh variabel yang digunakan di awal. Selain itu dilakukan splitting dengan proporsi 80% : 20% menggunakan mekanisme stratify terhadap kategori untuk memperhatikan distribusi label untuk data latih dan data uji.
 
 ### 3. Normalisasi Data
-Tahapan selanjutnya adalah akan dilakukan normalisasi menggunakan metode MinMaxScaler terhadap data latih dan data uji. Metode ini membuat setiap data pada variabel prediktor akan berada pada rentang [0, 1]. Hal ini digunakan agar meminimalisir efek skala data pada algoritma KNN. Hal ini pada dasarnya tidak diperlukan pada algoritma CatBoost karena algoritma berbasis tree tidak dipengaruhi skala data. Namun penggunaan normalisasi tetap tidak akan merubah hasil analisis pada algoritma CatBoost.
 
+Tahapan selanjutnya adalah akan dilakukan normalisasi menggunakan metode MinMaxScaler terhadap data latih dan data uji. Metode ini membuat setiap data pada variabel prediktor akan berada pada rentang [0, 1]. Hal ini digunakan agar meminimalisir efek skala data pada algoritma KNN. Hal ini pada dasarnya tidak diperlukan pada algoritma CatBoost karena algoritma berbasis tree tidak dipengaruhi skala data. Namun penggunaan normalisasi tetap tidak akan merubah hasil analisis pada algoritma CatBoost.
 
 ## Modeling
 
-Pemodelan yang dilakukan pada analisis ini akan menggunakan Algoritma KNN dan Algoritma CatBoost. Kedua metode ini dipilih karena kemampuannya yang baik untuk diimplementasikan pada kasus klasifikasi [(Suyal & Goyal, 2022)](https://ijettjournal.org/archive/ijett-v70i7p205)[(Chang et al., 2023)](https://doi.org/10.3390/s23041811). Dalam menentukan hyperparameter yang dapat mengoptimalkan model, digunakan algoritma untuk proses *Hyperparameter Tuning* dengan library optuna yang menerapkan algoritma *Tree-Structured Parzen Estimator* [(Watanabe, 2023)](https://arxiv.org/abs/2304.11127).
+Pemodelan yang dilakukan pada analisis ini akan menggunakan Algoritma KNN dan Algoritma CatBoost. Kedua metode ini dipilih karena kemampuannya yang baik untuk diimplementasikan pada kasus klasifikasi [(Suyal & Goyal, 2022)](https://ijettjournal.org/archive/ijett-v70i7p205)[(Chang et al., 2023)](https://doi.org/10.3390/s23041811). Dalam menentukan hyperparameter yang dapat mengoptimalkan model, digunakan algoritma untuk proses _Hyperparameter Tuning_ dengan library optuna yang menerapkan algoritma _Tree-Structured Parzen Estimator_ [(Watanabe, 2023)](https://arxiv.org/abs/2304.11127).
 
 Berdasarkan pemodelan yang dilakukan serta proses hyperparameter tuning yang dibatasi dengan trial sebanyak 10 untuk mengefisienkan pencarian diperoleh kedua algoritma optimal pada konfigurasi berikut.
 
@@ -118,6 +125,7 @@ Ukuran evaluasi yang digunakan untuk menilai kebaikan model dan skenario yang di
 ### Rumus Ukuran Evaluasi Model
 
 #### 1. Balanced Accuracy
+
 Balanced Accuracy digunakan untuk mengatasi ketidakseimbangan kelas, dan didefinisikan sebagai rata-rata dari sensitivitas (recall) dan spesifisitas:
 
 $$
@@ -125,6 +133,7 @@ $$
 $$
 
 #### 2. F1 Score (Macro)
+
 F1 Score menggabungkan precision dan recall. Pendekatan "macro" menghitung skor F1 untuk setiap kelas dan mengambil rata-rata tanpa mempertimbangkan proporsi kelas:
 
 $$
@@ -132,6 +141,7 @@ $$
 $$
 
 #### 3. Accuracy
+
 Akurasi mengukur proporsi prediksi yang benar terhadap total data:
 
 $$
@@ -139,38 +149,38 @@ $$
 $$
 
 #### 4. AUC (Area Under Curve)
+
 AUC mengukur kemampuan model dalam membedakan antara kelas positif dan negatif, biasanya merujuk pada luas di bawah kurva ROC (Receiver Operating Characteristic). Nilainya berada di antara 0 dan 1, semakin tinggi semakin baik.
 
 $$
 \text{AUC} = \int_0^1 TPR(FPR^{-1}(x)) \, dx
 $$
 
-
 Keterangan:
-- **TP**: True Positive  
-- **TN**: True Negative  
-- **FP**: False Positive  
-- **FN**: False Negative  
-- **TPR**: True Positive Rate  
+
+- **TP**: True Positive
+- **TN**: True Negative
+- **FP**: False Positive
+- **FN**: False Negative
+- **TPR**: True Positive Rate
 - **FPR**: False Positive Rate
 
 Ukuran evaluasi yang dihitung pada setiap model akan mengacu pada confusion matrix yang dapat dilihat pada Gambar 4. Komponen True Positive, True Negative, False Positive, dan False Negative digunakan untuk menghitung keempat ukuran evaluasi yang digunakan. Namun, hal ini sudah dapat dilakukan menggunakan library dari scikit-learn. Hasil evaluasi pada keempat skenario yang digunakan dapat dilihat pada Tabel 1.
 
 ### Tabel 1. Evaluasi Model pada Skenario Analisis
 
-
-| No | Skenario             | Balanced Accuracy | F1 Score (Macro) | Accuracy | AUC   |
-|----|----------------------|-------------------|------------------|----------|--------|
-| 0  | Model KNN            | 0.78              | 0.82             | 0.95     | 0.86   |
-| 1  | Model CatBoost       | 0.85              | 0.89             | 0.97     | 0.97   |
-| 2  | Model KNN-SMOTE      | 0.84              | 0.79             | 0.93     | 0.92   |
-| 3  | Model CatBoost-SMOTE | 0.85              | 0.89             | 0.97     | 0.98   |
+| No  | Skenario             | Balanced Accuracy | F1 Score (Macro) | Accuracy | AUC  |
+| --- | -------------------- | ----------------- | ---------------- | -------- | ---- |
+| 0   | Model KNN            | 0.78              | 0.82             | 0.95     | 0.86 |
+| 1   | Model CatBoost       | 0.85              | 0.89             | 0.97     | 0.97 |
+| 2   | Model KNN-SMOTE      | 0.84              | 0.79             | 0.93     | 0.92 |
+| 3   | Model CatBoost-SMOTE | 0.85              | 0.89             | 0.97     | 0.98 |
 
 **Penjelasan :**
 
-Berdasarkan hasil evaluasi pada keempat skenario yang diujikan terlihat bahwa penerapan teknik oversampling pada algoritma KNN berhasil meningkatkan balanced accuracy dan AUC pada model KNN namun menurunkan ukuran evaluasi F1-Score Macro dan Accuracy pada moodel tersebut. Hal ini dapat dilihat pada nilai Balanced Accuracy yang sebelumnya 0.78, setelah menerapkan SMOTE menjadi 0.83. Perlakuan tersebut memberikan penurunan pada F-1 Score Macro yang awalnya bernilai 0.82 menjadi 0.79. Hal ini menunjukkan ketidakstabilan hasil model. 
+Berdasarkan hasil evaluasi pada keempat skenario yang diujikan terlihat bahwa penerapan teknik oversampling pada algoritma KNN berhasil meningkatkan balanced accuracy dan AUC pada model KNN namun menurunkan ukuran evaluasi F1-Score Macro dan Accuracy pada moodel tersebut. Hal ini dapat dilihat pada nilai Balanced Accuracy yang sebelumnya 0.78, setelah menerapkan SMOTE menjadi 0.83. Perlakuan tersebut memberikan penurunan pada F-1 Score Macro yang awalnya bernilai 0.82 menjadi 0.79. Hal ini menunjukkan ketidakstabilan hasil model.
 
-Namun, kondisi berbeda ditunjukkan oleh algoritma CatBoost, dimana terdapat peningkatan hasil setelah SMOTE pada ukuran evaluasi F-1 Score Macro, Accuracy, dan AUC walaupun tidak begitu signifikan. Hal ini menunjukkan penerapan teknik Oversampling terbukti efektif dalam meningkatkan informasi yang diperoleh model terkait sebaran data. Pada balanced accuracy terdapat penurunan yang kecil sebesar 0,002 setelah diberikan treatment oversampling, namun hal tersebut masih bisa dipertahankan karena ukuran lainnya menunjukkan peningkatan. 
+Namun, kondisi berbeda ditunjukkan oleh algoritma CatBoost, dimana terdapat peningkatan hasil setelah SMOTE pada ukuran evaluasi F-1 Score Macro, Accuracy, dan AUC walaupun tidak begitu signifikan. Hal ini menunjukkan penerapan teknik Oversampling terbukti efektif dalam meningkatkan informasi yang diperoleh model terkait sebaran data. Pada balanced accuracy terdapat penurunan yang kecil sebesar 0,002 setelah diberikan treatment oversampling, namun hal tersebut masih bisa dipertahankan karena ukuran lainnya menunjukkan peningkatan.
 
 Berdasarkan analisis yang dilakukan dapat diperoleh kesimpulan sebagai berikut.
 
@@ -192,4 +202,26 @@ User akan diminta untuk mengisi form berupa isian terkait kondisi kesehatan sepe
   <figcaption><b>Gambar 5.</b> Preview Laman Dashboard</figcaption>
 </figure>
 
+## Reference
 
+Referensi ditulis menggunakan format APA.
+
+1. Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P. (2002). SMOTE: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research, 16, 321–357. https://doi.org/10.1613/jair.953
+
+2. Chang, W., Wang, X., Yang, J., & Qin, T. (2023). An improved CatBoost-based classification model for ecological suitability of blueberries. Sensors, 23(4), 1811. https://doi.org/10.3390/s23041811
+
+3. International Diabetes Federation. (n.d.). Diabetes facts & figures. https://idf.org/about-diabetes/diabetes-facts-figures/
+
+4. m2s6a8. (2024). diabetes_prediction_dataset [Dataset]. Hugging Face. https://huggingface.co/datasets/m2s6a8/diabetes_prediction_dataset
+
+5. Olisah, C. C., Smith, L., & Smith, M. (2022). Diabetes mellitus prediction and diagnosis from a data preprocessing and machine learning perspective. Computer Methods and Programs in Biomedicine, 220, 106773. https://doi.org/10.1016/j.cmpb.2022.106773
+
+6. Rokom. (2024, Januari 10). Saatnya mengatur si manis. Sehat Negeriku – Kementerian Kesehatan Republik Indonesia. https://sehatnegeriku.kemkes.go.id/baca/blog/20240110/5344736/saatnya-mengatur-si-manis/
+
+7. Suyal, M., & Goyal, P. (2022). A review on analysis of K-nearest neighbor classification machine learning algorithms based on supervised learning. International Journal of Engineering Trends and Technology, 70(7), 43–48. https://doi.org/10.14445/22315381/IJETT-V70I7P205
+
+8. Watanabe, S. (2023). Tree-structured parzen estimator: Understanding its algorithm components and their roles for better empirical performance. arXiv preprint arXiv:2304.11127. https://arxiv.org/abs/2304.11127
+
+9. Wu, Y., Zhang, Q., Hu, Y., Sun-Woo, K., Zhang, X., Zhu, H., Jie, L., & Li, S. (2022). Novel binary logistic regression model based on feature transformation of XGBoost for type 2 diabetes mellitus prediction in healthcare systems. Future Generation Computer Systems, 129, 1–12. https://doi.org/10.1016/j.future.2021.11.003
+
+10. Wu, Y.-T., Zhang, C.-J., Mol, B. W., Kawai, A., Li, C., Chen, L., Wang, Y., Sheng, J.-Z., Fan, J.-X., Shi, Y., & Huang, H.-F. (2021). Early prediction of gestational diabetes mellitus in the Chinese population via advanced machine learning. The Journal of Clinical Endocrinology & Metabolism, 106(3), e1191–e1205. https://doi.org/10.1210/clinem/dgaa899
