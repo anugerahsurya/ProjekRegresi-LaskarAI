@@ -1,7 +1,12 @@
+import os
 import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+
+# Cetak semua file di direktori saat ini
+st.write("### File yang tersedia di direktori saat ini:")
+st.write(os.listdir())
 
 # Load model dan encoder/scaler
 gender_encoder = joblib.load("gender_label_encoder.joblib")
