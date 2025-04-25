@@ -9,9 +9,9 @@ st.write("### File yang tersedia di direktori saat ini:")
 st.write(os.listdir())
 
 # Load model dan encoder/scaler
-gender_encoder = joblib.load("gender_label_encoder.joblib")
-scaler = joblib.load("minmax_scaler.joblib")
-model = joblib.load("BestModelCB.joblib")
+gender_encoder = joblib.load("Dashboard/gender_label_encoder.joblib")
+scaler = joblib.load("Dashboard/minmax_scaler.joblib")
+model = joblib.load("Dashboard/BestModelCB.joblib")
 
 # Kolom one-hot smoking history
 smoking_ohe_columns = [
