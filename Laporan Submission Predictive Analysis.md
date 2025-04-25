@@ -115,30 +115,31 @@ Ukuran evaluasi yang digunakan untuk menilai kebaikan model dan skenario yang di
 #### 1. Balanced Accuracy
 Balanced Accuracy digunakan untuk mengatasi ketidakseimbangan kelas, dan didefinisikan sebagai rata-rata dari sensitivitas (recall) dan spesifisitas:
 
-\[
+$$
 \text{Balanced Accuracy} = \frac{1}{2} \left( \frac{TP}{TP + FN} + \frac{TN}{TN + FP} \right)
-\]
+$$
 
 #### 2. F1 Score (Macro)
 F1 Score menggabungkan precision dan recall. Pendekatan "macro" menghitung skor F1 untuk setiap kelas dan mengambil rata-rata tanpa mempertimbangkan proporsi kelas:
 
-\[
+$$
 \text{F1 Score (Macro)} = \frac{1}{N} \sum_{i=1}^{N} \frac{2 \cdot \text{Precision}_i \cdot \text{Recall}_i}{\text{Precision}_i + \text{Recall}_i}
-\]
+$$
 
 #### 3. Accuracy
 Akurasi mengukur proporsi prediksi yang benar terhadap total data:
 
-\[
+$$
 \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
-\]
+$$
 
 #### 4. AUC (Area Under Curve)
 AUC mengukur kemampuan model dalam membedakan antara kelas positif dan negatif, biasanya merujuk pada luas di bawah kurva ROC (Receiver Operating Characteristic). Nilainya berada di antara 0 dan 1, semakin tinggi semakin baik.
 
-\[
-\text{AUC} = \int_0^1 TPR(FPR^{-1}(x)) dx
-\]
+$$
+\text{AUC} = \int_0^1 TPR(FPR^{-1}(x)) \, dx
+$$
+
 
 Keterangan:
 - **TP**: True Positive  
