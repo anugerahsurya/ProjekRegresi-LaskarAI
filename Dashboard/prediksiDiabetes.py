@@ -2,32 +2,20 @@ import os
 import streamlit as st
 import numpy as np
 import pandas as pd
-import joblib
+import pickle
 
-# Tampilkan isi direktori saat ini
-st.write("### File dan Folder di Direktori Saat Ini:")
-root_files = os.listdir()
-st.write(root_files)
+# Load encoder
+with open("Dashboard/gender_label_encoder.pkl", 'rb') as file:
+    gender_encoder = pickle.load(file)
 
-# Tampilkan isi masing-masing folder (kecuali folder tersembunyi seperti .git)
-st.write("### Isi Masing-Masing Folder:")
-for item in root_files:
-    path = os.path.join(".", item)
-    if os.path.isdir(path) and not item.startswith("."):
-        st.write(f"📁 **{item}**:")
-        try:
-            folder_files = os.listdir(path)
-            if folder_files:
-                st.write(folder_files)
-            else:
-                st.write("_(Folder kosong)_")
-        except Exception as e:
-            st.write(f"❌ Gagal membaca isi folder: {e}")
+# Load scaler
+with open("Dashboard/minmax_scaler.pkl", 'rb') as file:
+    scaler = pickle.load(file)
 
-# Load model dan encoder/scaler
-gender_encoder = joblib.load("Dashboard/gender_label_encoder.joblib")
-scaler = joblib.load("Dashboard/minmax_scaler.joblib")
-model = joblib.load("Dashboard/BestModelCB.joblib")
+# Load model
+with open("Dashboard/BestModelCB.pkl", 'rb') as file:
+    model = pickle.load(file)
+
 
 # Kolom one-hot smoking history
 smoking_ohe_columns = [
