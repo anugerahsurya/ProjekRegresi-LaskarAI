@@ -1,4 +1,9 @@
-# Laporan Proyek Machine Learning - Nama Anda
+# Laporan Proyek Machine Learning - Anugerah Surya Atmaja
+
+- **Nama:** Anugerah Surya Atmaja
+- **Email Dicoding :** atmajasuryaanugerah@gmail.com
+- **Email Laskar :** a406ybm064@devacademy.id
+- **ID Dicoding:** anugerahhsurya
 
 ## Domain Proyek
 
@@ -149,6 +154,7 @@ Keterangan:
 - **TPR**: True Positive Rate  
 - **FPR**: False Positive Rate
 
+Ukuran evaluasi yang dihitung pada setiap model akan mengacu pada confusion matrix yang dapat dilihat pada Gambar 4. Komponen True Positive, True Negative, False Positive, dan False Negative digunakan untuk menghitung keempat ukuran evaluasi yang digunakan. Namun, hal ini sudah dapat dilakukan menggunakan library dari scikit-learn. Hasil evaluasi pada keempat skenario yang digunakan dapat dilihat pada Tabel 1.
 
 ### Tabel 1. Evaluasi Model pada Skenario Analisis
 
