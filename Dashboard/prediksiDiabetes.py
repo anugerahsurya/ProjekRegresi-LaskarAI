@@ -3,6 +3,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import pickle
+import catboost
 
 # Load encoder
 with open("Dashboard/gender_label_encoder.pkl", 'rb') as file:
