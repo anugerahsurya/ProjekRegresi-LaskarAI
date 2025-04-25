@@ -171,13 +171,19 @@ Berdasarkan analisis yang dilakukan dapat diperoleh kesimpulan sebagai berikut.
 1. Model terbaik yang dapat digunakan untuk mengklasifikasikan kerentanan diabetes adalah model yang dilatih menggunakan Algoritma Catboost serta menerapkan Teknik Oversampling SMOTE. Hal ini ditunjukkan dengan ukuran evaluasi yang lebih baik dibanding skenario lainnya.
 2. Teknik oversampling SMOTE terbukti efektif untuk meningkatakn performa model klasifikasi yang diukur melalui peningkatan performa berdasarkan evaluasi tanpa implementasi SMOTE.
 3. Model yang dibangun sudah cukup mengklasifikasikan data dengan baik, sehingga dapat diimplementasikan dalam pembuatan model prediksi diabetes.
+4. Dashboard penelitian dapat diakses melalui tautan berikut : [Dashboard Prediksi Kerentanan Diabetes](https://projekregresi-laskarai-kerentanan-diabetes.streamlit.app/)
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+## Deployment
 
-**---Ini adalah bagian akhir laporan---**
+Model yang dibentuk dideploy menggunakan streamlit yang dapat diakses pada tautan berikut.
 
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+[Dashboard Prediksi Kerentanan Diabetes](https://projekregresi-laskarai-kerentanan-diabetes.streamlit.app/)
+
+User akan diminta untuk mengisi form berupa isian terkait kondisi kesehatan seperti Jenis Kelamin, Usia, Riwayat Hipertensi, Riwayat Penyakit Hati, Berat Badan, Tinggi Badan, HbA1c Level, Kadar Gula Darah, dan Riwayat Merokok. Berat badan dan tinggi badan digunakan untuk menghitung Body Mass Index (BMI). Hasil prediksi akan berupa keterangan kerentanan diabetes seseorang.
+
+<figure>
+  <img src="Visualisasi/Preview Hasil.png" alt="Hasil Prediksi pada Dashboard" width="600"/>
+  <figcaption><b>Gambar 5.</b> Preview Laman Dashboard</figcaption>
+</figure>
+
 

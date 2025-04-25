@@ -14,7 +14,7 @@ with open("Dashboard/minmax_scaler.pkl", 'rb') as file:
     scaler = pickle.load(file)
 
 # Load model
-with open("Dashboard/BestModelCB.pkl", 'rb') as file:
+with open("Dashboard/BestModelCBSMOTE.pkl", 'rb') as file:
     model = pickle.load(file)
 
 
@@ -34,12 +34,12 @@ def hitung_bmi(berat, tinggi_cm):
     return berat / (tinggi_m ** 2)
 
 # Judul
-st.title("Prediksi Diabetes")
+st.title("Prediksi Kerentanan Diabetes")
 
 # Form input
 with st.form("health_form"):
-    gender = st.selectbox("Gender", ["Female", "Male"])
-    age = st.slider("Age", min_value=0, max_value=120, value=25)
+    gender = st.selectbox("Jenis Kelamin", ["Female", "Male"])
+    age = st.slider("Usia", min_value=0, max_value=120, value=25)
     hypertension = st.number_input("Riwayat Hipertensi (0 = Tidak, 1 = Ya)", min_value=0, max_value=1)
     heart_disease = st.number_input("Riwayat Penyakit Hati (0 = Tidak, 1 = Ya)", min_value=0, max_value=1)
     
