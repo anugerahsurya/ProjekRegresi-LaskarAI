@@ -4,9 +4,25 @@ import numpy as np
 import pandas as pd
 import joblib
 
-# Cetak semua file di direktori saat ini
-st.write("### File yang tersedia di direktori saat ini:")
-st.write(os.listdir())
+# Tampilkan isi direktori saat ini
+st.write("### File dan Folder di Direktori Saat Ini:")
+root_files = os.listdir()
+st.write(root_files)
+
+# Tampilkan isi masing-masing folder (kecuali folder tersembunyi seperti .git)
+st.write("### Isi Masing-Masing Folder:")
+for item in root_files:
+    path = os.path.join(".", item)
+    if os.path.isdir(path) and not item.startswith("."):
+        st.write(f"📁 **{item}**:")
+        try:
+            folder_files = os.listdir(path)
+            if folder_files:
+                st.write(folder_files)
+            else:
+                st.write("_(Folder kosong)_")
+        except Exception as e:
+            st.write(f"❌ Gagal membaca isi folder: {e}")
 
 # Load model dan encoder/scaler
 gender_encoder = joblib.load("Dashboard/gender_label_encoder.joblib")
