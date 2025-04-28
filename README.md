@@ -99,14 +99,38 @@ Tahapan selanjutnya adalah akan dilakukan normalisasi menggunakan metode MinMaxS
 
 ## Modeling
 
-Pemodelan yang dilakukan pada analisis ini akan menggunakan Algoritma KNN dan Algoritma CatBoost. Kedua metode ini dipilih karena kemampuannya yang baik untuk diimplementasikan pada kasus klasifikasi [(Suyal & Goyal, 2022)](https://ijettjournal.org/archive/ijett-v70i7p205)[(Chang et al., 2023)](https://doi.org/10.3390/s23041811). Dalam menentukan hyperparameter yang dapat mengoptimalkan model, digunakan algoritma untuk proses _Hyperparameter Tuning_ dengan library optuna yang menerapkan algoritma _Tree-Structured Parzen Estimator_ [(Watanabe, 2023)](https://arxiv.org/abs/2304.11127).
+### Hyperparameter Tuning Algoritma Machine Learning
+Pemodelan yang dilakukan pada analisis ini akan menggunakan Algoritma KNN dan Algoritma CatBoost. Kedua metode ini dipilih karena kemampuannya yang baik untuk diimplementasikan pada kasus klasifikasi [(Suyal & Goyal, 2022)](https://ijettjournal.org/archive/ijett-v70i7p205)[(Chang et al., 2023)](https://doi.org/10.3390/s23041811). K-Nearest Neighbors (KNN) merupakan algoritma klasifikasi berbasis instance-based learning, di mana model tidak melakukan proses pelatihan eksplisit (lazy learner). Sebaliknya, saat diberikan data baru, KNN membandingkannya dengan seluruh data latih yang tersedia. Algoritma ini bekerja dengan cara mencari sejumlah 𝑘tetangga terdekat berdasarkan ukuran jarak tertentu. Kelas dari data baru kemudian diprediksi berdasarkan mayoritas kelas dari tetangga-tetangga tersebut. Semakin kecil nilai k, model akan lebih sensitif terhadap noise, sedangkan nilai k yang terlalu besar dapat menyebabkan prediksi menjadi kurang akurat karena mempertimbangkan terlalu banyak tetangga yang tidak relevan [(Cover & Hart, 1967)](https://doi.org/10.1109/TIT.1967.1053964). KNN memiliki kelebihan dalam kesederhanaan implementasi dan efektivitas pada dataset kecil, namun kelemahannya terletak pada kebutuhan komputasi tinggi saat prediksi, terutama jika jumlah data latih sangat besar.
+
+Algoritma selanjutnya yang digunakan yaitu CatBoost . Algoritma ini merupakan algoritma berbasis gradient boosting yang dirancang khusus untuk menangani data kategorikal secara lebih efisien tanpa perlu pra-pemrosesan yang kompleks [(Prokhorenkova et al., 2018)](https://doi.org/10.48550/arXiv.1706.09516). Dalam klasifikasi, CatBoost membangun model secara iteratif melalui serangkaian pohon keputusan decision trees yang mengoptimalkan kesalahan prediksi secara bertahap. Keunggulan utama CatBoost dibandingkan algoritma boosting lainnya adalah kemampuannya mengurangi overfitting melalui teknik pengaturan seperti Ordered Boosting dan penggunaan kombinasi fitur kategorikal secara otomatis. CatBoost juga mendukung penggunaan GPU untuk mempercepat proses pelatihan, menjadikannya cocok untuk dataset besar dan kompleks. Selain itu, CatBoost secara konsisten menunjukkan performa unggul dalam banyak tugas klasifikasi, bahkan pada data dengan fitur kategorikal yang dominan.
+
+Dalam menentukan hyperparameter yang dapat mengoptimalkan model, digunakan algoritma untuk proses _Hyperparameter Tuning_ dengan library optuna yang menerapkan algoritma _Tree-Structured Parzen Estimator_ [(Watanabe, 2023)](https://arxiv.org/abs/2304.11127). Dalam menemukan *hyperparameter* terbaik untuk algoritma CatBoost dan KNN, digunakan konfigurasi ruang pencarian yang dapat dilihat pada tabel berikut.
+
+**Tabel 1.** Ruang Pencarian Hyperparameter untuk Algoritma CatBoost
+| Hyperparameter     | Tipe Data | Range Pencarian             |
+|--------------------|-----------|-----------------------------|
+| depth              | Integer   | [4, 10]                 |
+| learning_rate      | Float     | [0.01, 0.3]             |
+| iterations         | Integer   | [100, 1000]             |
+| border_count       | Integer   | [32, 255]               |
+| bagging_temperature| Float     | [0, 1]                  |
+| l2_leaf_reg        | Float     | [0.001, 10]             |
+
+**Tabel 2.** Ruang Pencarian Hyperparameter untuk Algoritma KNN
+
+| Hyperparameter | Tipe Data     | Range Pencarian                  |
+|----------------|---------------|----------------------------------|
+| n_neighbors    | Integer        | [3, 10]                     |
+| weights        | Kategori       | {'uniform', 'distance'}           |
+| p              | Integer        | [1, 2]                     |
 
 Berdasarkan pemodelan yang dilakukan serta proses hyperparameter tuning yang dibatasi dengan trial sebanyak 10 untuk mengefisienkan pencarian diperoleh kedua algoritma optimal pada konfigurasi berikut.
 
 1. Best KNN Parameters: {'n_neighbors': 3, 'weights': 'distance', 'p': 2}
 2. Best CatBoost Parameters: {'depth': 9, 'learning_rate': 0.23318511591740917, 'iterations': 926, 'border_count': 99, 'bagging_temperature': 0.5500581986623337, 'l2_leaf_reg': 6.570372884152365}
 
-Dalam mengatasi kondisi ketidakseimbangan data, dilakukan juga skenario untuk menambahkan treatment berupa Oversampling dengan **SMOTE** [(Chawla et al., 2002)](https://arxiv.org/pdf/1106.1813). Berdasarkan teknik oversampling yang diterapkan pada dtaa latih, model kembali dilatih dan dilakukan proses hyperparameter tuning sehingga diperoleh pada skenario dengan SMOTE, ditemukan model optimal dengan konfigurasi berikut.
+### Penerapan Teknik Oversampling : SMOTE
+Dalam mengatasi kondisi ketidakseimbangan data, dilakukan juga skenario untuk menambahkan treatment berupa Oversampling dengan **SMOTE** [(Chawla et al., 2002)](https://arxiv.org/pdf/1106.1813).  SMOTE berguna untuk menambah distribusi data pada class minoritas berdasarkan hyperparameter bernama **Sampling Strategy**. Kondisi ini berarti jika **Sampling Strategy** diatur menjadi 0.5, maka class minoritas akan ditambah hingga mencapai 0.5 dari jumlah class mayoritas. Berdasarkan teknik oversampling yang diterapkan pada dtaa latih, model kembali dilatih dan dilakukan proses hyperparameter tuning sehingga diperoleh pada skenario dengan SMOTE, ditemukan model optimal dengan konfigurasi berikut.
 
 1. Best KNN Parameters: {'n_neighbors': 9, 'weights': 'distance', 'p': 2}
 2. Best CatBoost Parameters: {'depth': 4, 'learning_rate': 0.29937529311170064, 'iterations': 879, 'border_count': 220, 'bagging_temperature': 0.32996767322674414, 'l2_leaf_reg': 2.2683208191054964}
@@ -210,18 +234,22 @@ Referensi ditulis menggunakan format APA.
 
 2. Chang, W., Wang, X., Yang, J., & Qin, T. (2023). An improved CatBoost-based classification model for ecological suitability of blueberries. Sensors, 23(4), 1811. https://doi.org/10.3390/s23041811
 
-3. International Diabetes Federation. (n.d.). Diabetes facts & figures. https://idf.org/about-diabetes/diabetes-facts-figures/
+3. Cover, T., & Hart, P. (1967). Nearest neighbor pattern classification. IEEE Transactions on Information Theory, 13(1), 21–27. https://doi.org/10.1109/TIT.1967.1053964
 
-4. m2s6a8. (2024). diabetes_prediction_dataset [Dataset]. Hugging Face. https://huggingface.co/datasets/m2s6a8/diabetes_prediction_dataset
+4. International Diabetes Federation. (n.d.). Diabetes facts & figures. https://idf.org/about-diabetes/diabetes-facts-figures/
 
-5. Olisah, C. C., Smith, L., & Smith, M. (2022). Diabetes mellitus prediction and diagnosis from a data preprocessing and machine learning perspective. Computer Methods and Programs in Biomedicine, 220, 106773. https://doi.org/10.1016/j.cmpb.2022.106773
+5. m2s6a8. (2024). diabetes_prediction_dataset [Dataset]. Hugging Face. https://huggingface.co/datasets/m2s6a8/diabetes_prediction_dataset
 
-6. Rokom. (2024, Januari 10). Saatnya mengatur si manis. Sehat Negeriku – Kementerian Kesehatan Republik Indonesia. https://sehatnegeriku.kemkes.go.id/baca/blog/20240110/5344736/saatnya-mengatur-si-manis/
+6. Olisah, C. C., Smith, L., & Smith, M. (2022). Diabetes mellitus prediction and diagnosis from a data preprocessing and machine learning perspective. Computer Methods and Programs in Biomedicine, 220, 106773. https://doi.org/10.1016/j.cmpb.2022.106773
 
-7. Suyal, M., & Goyal, P. (2022). A review on analysis of K-nearest neighbor classification machine learning algorithms based on supervised learning. International Journal of Engineering Trends and Technology, 70(7), 43–48. https://doi.org/10.14445/22315381/IJETT-V70I7P205
+7. Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., & Gulin, A. (2018). CatBoost: unbiased boosting with categorical features. Advances in Neural Information Processing Systems, 31. doi.org/10.48550/arXiv.1706.09516
 
-8. Watanabe, S. (2023). Tree-structured parzen estimator: Understanding its algorithm components and their roles for better empirical performance. arXiv preprint arXiv:2304.11127. https://arxiv.org/abs/2304.11127
+8. Rokom. (2024, Januari 10). Saatnya mengatur si manis. Sehat Negeriku – Kementerian Kesehatan Republik Indonesia. https://sehatnegeriku.kemkes.go.id/baca/blog/20240110/5344736/saatnya-mengatur-si-manis/
 
-9. Wu, Y., Zhang, Q., Hu, Y., Sun-Woo, K., Zhang, X., Zhu, H., Jie, L., & Li, S. (2022). Novel binary logistic regression model based on feature transformation of XGBoost for type 2 diabetes mellitus prediction in healthcare systems. Future Generation Computer Systems, 129, 1–12. https://doi.org/10.1016/j.future.2021.11.003
+9. Suyal, M., & Goyal, P. (2022). A review on analysis of K-nearest neighbor classification machine learning algorithms based on supervised learning. International Journal of Engineering Trends and Technology, 70(7), 43–48. https://doi.org/10.14445/22315381/IJETT-V70I7P205
 
-10. Wu, Y.-T., Zhang, C.-J., Mol, B. W., Kawai, A., Li, C., Chen, L., Wang, Y., Sheng, J.-Z., Fan, J.-X., Shi, Y., & Huang, H.-F. (2021). Early prediction of gestational diabetes mellitus in the Chinese population via advanced machine learning. The Journal of Clinical Endocrinology & Metabolism, 106(3), e1191–e1205. https://doi.org/10.1210/clinem/dgaa899
+10. Watanabe, S. (2023). Tree-structured parzen estimator: Understanding its algorithm components and their roles for better empirical performance. arXiv preprint arXiv:2304.11127. https://arxiv.org/abs/2304.11127
+
+11. Wu, Y., Zhang, Q., Hu, Y., Sun-Woo, K., Zhang, X., Zhu, H., Jie, L., & Li, S. (2022). Novel binary logistic regression model based on feature transformation of XGBoost for type 2 diabetes mellitus prediction in healthcare systems. Future Generation Computer Systems, 129, 1–12. https://doi.org/10.1016/j.future.2021.11.003
+
+12. Wu, Y.-T., Zhang, C.-J., Mol, B. W., Kawai, A., Li, C., Chen, L., Wang, Y., Sheng, J.-Z., Fan, J.-X., Shi, Y., & Huang, H.-F. (2021). Early prediction of gestational diabetes mellitus in the Chinese population via advanced machine learning. The Journal of Clinical Endocrinology & Metabolism, 106(3), e1191–e1205. https://doi.org/10.1210/clinem/dgaa899
